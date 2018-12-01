@@ -29,6 +29,56 @@
 #
 # You're Story : ....
 # see fig1
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+data = pd.read_csv('multipleChoiceResponses.csv', header=None, skiprows=[0,1], usecols=[3,4])
+sums = dict()
+fig, ax = plt.subplots()
+countries=list()
+for index,row in data.iterrows():
+    if sums.get(row[4],None)==None:
+        sums[row[4]]=dict()
+    if sums[row[4]].get(row[3],None) != None:
+        sums[row[4]][row[3]]=sums[row[4]].get(row[3],0)+1
+    if sums[row[4]].get(row[3],None) == None:
+        sums[row[4]][row[3]]=sums[row[4]].get(row[3],0)+1
+for country in sums.keys():
+    countries.append(country)
+countries.sort()
+ax.set_ylabel('Number of Developers')
+ax.set_xlabel('Countries')
+ax.set_title('Fig1. Number of developers in each country')
+barw=0.2
+age1821 = list()
+age2224 = list()
+age2529 = list()
+allage = list()
+index = np.arange(len(countries))
+for i in countries:
+    age1821.append(sums[i]['18-21'])
+    age2224.append(sums[i]['22-24'])
+    age2529.append(sums[i]['25-29'])
+    allage.append(sum(sums[i].values()))
+rects1 = ax.bar(index, allage, barw, color='orange', label='AllDevelopers')
+rects2 = ax.bar(index+barw, age1821, barw, color='blue', label='Age 18-21')
+rects3 = ax.bar(index+barw+barw, age2224, barw, color='purple', label='Age 22-24')
+rects4 = ax.bar(index+(3*barw), age2529, barw, color='gray', label='Age 25-29')
+ax.legend()
+ax.set_xticks(index + 3*barw / 2)
+ax.set_xticklabels(countries)
+plt.xticks(rotation=90)
+plt.style.use('seaborn-darkgrid')
+plt.rcParams['figure.figsize']=(20,20)
+fig.tight_layout()
+ax.margins(x=0)
+ax.annotate('Most of the young participants are from India', xy=(22.2, 1100), xytext=(25, 1100), arrowprops=dict(facecolor='black', shrink=0.05),)
+ax.annotate('Most of participants are from USA', xy=(56, 4500), xytext=(40, 4500), arrowprops=dict(facecolor='black', shrink=0.05),)
+plt.show()
+#print(age1821)
+
+#print(data[3])
+#multipleChoiceResponses
 
 
 # Fig2 (30pts)
@@ -64,9 +114,8 @@
 # colors and font size, showing the percentage, Title and showing the two figures in
 # the same window have all points.
 # see fig3
-import numpy as np
-import matplotlib.pyplot as plt
-%matplotlib inline
-plt.style.use('seaborn-whitegrid')
-fig = plt.figure()
-ax = plt.axes()
+
+# %matplotlib inline
+# plt.style.use('seaborn-whitegrid')
+# fig = plt.figure()
+# ax = plt.axes()
