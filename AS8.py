@@ -29,27 +29,28 @@
 #
 # You're Story : ....
 # see fig1
+import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-data = pd.read_csv('multipleChoiceResponses.csv', header=None, skiprows=[0,1], usecols=[3,4])
+data = pd.read_csv('multipleChoiceResponses.csv', header=None, skiprows=[0, 1], usecols=[3, 4])
 sums = dict()
 fig, ax = plt.subplots()
-countries=list()
-for index,row in data.iterrows():
-    if sums.get(row[4],None)==None:
-        sums[row[4]]=dict()
-    if sums[row[4]].get(row[3],None) != None:
-        sums[row[4]][row[3]]=sums[row[4]].get(row[3],0)+1
-    if sums[row[4]].get(row[3],None) == None:
-        sums[row[4]][row[3]]=sums[row[4]].get(row[3],0)+1
+countries = list()
+for index, row in data.iterrows():
+    if sums.get(row[4], None) == None:
+        sums[row[4]] = dict()
+    if sums[row[4]].get(row[3], None) != None:
+        sums[row[4]][row[3]] = sums[row[4]].get(row[3], 0)+1
+    if sums[row[4]].get(row[3], None) == None:
+        sums[row[4]][row[3]] = sums[row[4]].get(row[3], 0)+1
 for country in sums.keys():
     countries.append(country)
 countries.sort()
 ax.set_ylabel('Number of Developers')
 ax.set_xlabel('Countries')
 ax.set_title('Fig1. Number of developers in each country')
-barw=0.2
+barw = 0.2
 age1821 = list()
 age2224 = list()
 age2529 = list()
@@ -69,18 +70,14 @@ ax.set_xticks(index + 3*barw / 2)
 ax.set_xticklabels(countries)
 plt.xticks(rotation=90)
 plt.style.use('seaborn-darkgrid')
-plt.rcParams['figure.figsize']=(20,20)
+plt.rcParams['figure.figsize'] = (20, 15)
 fig.tight_layout()
 ax.margins(x=0)
 ax.annotate('Most of the young participants are from India', xy=(22.2, 1100), xytext=(25, 1100), arrowprops=dict(facecolor='black', shrink=0.05),)
 ax.annotate('Most of participants are from USA', xy=(56, 4500), xytext=(40, 4500), arrowprops=dict(facecolor='black', shrink=0.05),)
 plt.show()
-#print(age1821)
 
-#print(data[3])
-#multipleChoiceResponses
-
-
+# multipleChoiceResponses
 # Fig2 (30pts)
 # In this step, you're going to study the corelation between experience and income of people.
 # So reproduce the following scatter plot in which the circles show each group of people and
@@ -94,6 +91,47 @@ plt.show()
 # Note:
 # try to reproduce the same following figure. Side bar, Labels, and Title has points.
 # see fig 2
+np.random.seed(19680801)
+
+data = pd.read_csv('multipleChoiceResponses.csv', header=None, skiprows=[0, 1], usecols=[11, 12])
+exp = dict()
+for index, row in data.iterrows():
+    if row[12] == 'I do not wish to disclose my approximate yearly compensation' or pd.isna(row[11]) or pd.isna(row[12]):
+        continue
+    if exp.get(row[11], None) == None:
+        exp[row[11]] = dict()
+    if exp[row[11]].get(row[12], None) != None:
+        exp[row[11]][row[12]] = exp[row[11]].get(row[12], 0)+1
+    if exp[row[11]].get(row[12], None) == None:
+        exp[row[11]][row[12]] = exp[row[11]].get(row[12], 0)+1
+print(exp)
+year_exp = list()
+for years in exp.keys():
+    year_exp.append(years)
+# year_exp.sort()
+print(year_exp)
+a = re.compile('^[0-9]*-([0-9]*)')
+fixed_exp = list()
+for i in year_exp:
+    fixed_exp += a.findall(i)
+
+year_exp.clear()
+for i in fixed_exp:
+    year_exp.append(int(i))
+year_exp.sort()
+year_exp.append('30 +')
+print(year_exp)
+
+
+x = np.arange(0.0, 50.0, 2.0)
+y = x ** 1.3 + np.random.rand(*x.shape) * 30.0
+s = np.random.rand(*x.shape) * 800 + 500
+
+plt.scatter(x, y, s, c="g", alpha=0.5, marker=r'$\clubsuit$',
+            label="Luck")
+plt.xlabel("years of experience")
+plt.ylabel("yearly compensation($USD)")
+plt.show()
 
 # Fig3 (40 pts)
 # In this part, you should plot two pie charts in the same window. The first chart shows
